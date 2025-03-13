@@ -1,4 +1,3 @@
-import config
 import duckdb
 import time
 
@@ -28,7 +27,7 @@ class Pipeline():
             return records
         
         else:
-            query_path = (Path(config.TRANSFORM_QUERY_PATH) / self.transform_query).resolve()
+            query_path = Path(self.transform_query).resolve()
             
             with open(query_path, 'r') as f:
                 tquery = f.read()

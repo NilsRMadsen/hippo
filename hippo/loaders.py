@@ -1,6 +1,7 @@
+from . import utils
+
 import duckdb
 import os
-import utils
 
 from duckdb.duckdb import DuckDBPyRelation
 from pathlib import Path

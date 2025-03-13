@@ -1,7 +1,5 @@
-import extractors
-import loaders
+from hippo import extractors, loaders
 
-TRANSFORM_QUERY_PATH = './transform_queries/'
 
 PIPELINES = {
 
@@ -12,7 +10,7 @@ PIPELINES = {
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
             #'kwargs': {}
         },
-        'transform_query': 'test_csv.sql',
+        'transform_query': './transform_queries/test_csv.sql',
         'loader': {
             'class': loaders.LocalFileLoader,
             'format': 'parquet',
@@ -29,7 +27,7 @@ PIPELINES = {
             'filepath': './data/test_out.parquet',
             #'kwargs': {}
         },
-        'transform_query': 'test_parquet.sql',
+        'transform_query': './transform_queries/test_parquet.sql',
         'loader': {
             'class': loaders.LocalFileLoader,
             'format': 'json',
@@ -46,7 +44,7 @@ PIPELINES = {
             'filepath': './data/test_out.json',
             #'kwargs': {}
         },
-        'transform_query': 'test_parquet.sql',
+        'transform_query': './transform_queries/test_parquet.sql',
         'loader': {
             'class': loaders.LocalFileLoader,
             'format': 'csv',
