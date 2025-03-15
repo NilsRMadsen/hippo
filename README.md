@@ -39,7 +39,7 @@ PIPELINES = {
 
 A transformer in Hippo can be either:
 1. A DuckDB SQL query, entered into the transformer config as ```'query_path': 'path/to/query.sql'```. The query should initially refer to a relation named ```records``` and return a single result set, e.g. ```select a, b from records```.
-2. Any Python function that receives a DuckDBPyRelation as its first positional argument, and returns a DuckDBPyRelation, entered into the transformer config as ```'function': my_func```. This allow for usage of DuckDB's object-oriented Relational API. 
+2. Any Python function that receives a DuckDBPyRelation as its first positional argument, and returns a DuckDBPyRelation, entered into the transformer config as ```'function': my_func```. This allows for the use of DuckDB's object-oriented Relational API. 
 
 Adding a ```'kwargs': {...}``` entry to the transformer config will expand the functionality based the type of transformer. For functions, ```kwargs``` will simply be passed into the function as additional keyword arguments. For queries, ```kwargs``` can be used to make the query dynamic. Entries in ```kwargs``` will be used to format the SQL query string using Python's ```str.format()``` method. 
 
@@ -94,7 +94,20 @@ A single Hippo pipeline should read from a single source, e.g. a single endpoint
 
 ## Dynamic Configuration
 
-Unlike other configuration frameworks, Hippo uses native Python dictionaries in a ```config.py``` or similarly-named module to store configurations. This allows for dynamic insertion of configuration values, and the passing of extractor and loader classes directly in the config. When you want to run a pipeline, an instance of the Pipeline class can be initialized by passing the pipeline config dictionary as the sole argument.
+Unlike other configuration frameworks, Hippo uses native Python dictionaries in a ```config.py``` or similarly-named module to store configurations. This allows for dynamic insertion of configuration values, and the passing of extractor and loader classes directly in the config. 
+
+## Running a Pipeline
+
+When you want to run a pipeline, an instance of the ```hippo.pipeline.Pipeline``` class can be initialized by passing the pipeline config as the sole argument. Then, you simply have to call ```Pipeline.run()```:
+
+```python
+import config
+from hippo.pipeline import Pipeline
+
+pipeline_config = config.PIPELINES['my_pipeline']
+pipeline = Pipeline(pipeline_config)
+pipeline.run()
+```
 
 ## Extensibility
 
@@ -143,7 +156,7 @@ from hippo.pipeline import Pipeline
 
 @dg.asset
 def my_data_asset():
-    pipeline_config = config.PIPELINES['my_pipeline_name']
+    pipeline_config = config.PIPELINES['my_pipeline']
     pipeline = Pipeline(pipeline_config)
     pipeline.run()
 ```
