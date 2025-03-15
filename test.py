@@ -1,6 +1,5 @@
 import config
 import resource
-
 from hippo.pipeline import Pipeline
 
 

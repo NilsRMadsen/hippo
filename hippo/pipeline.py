@@ -1,6 +1,5 @@
 import duckdb
 import time
-
 from duckdb.duckdb import DuckDBPyRelation
 from pathlib import Path
 
@@ -12,7 +11,7 @@ class Pipeline():
         extractor_class = self.pipeline_config['extractor']['class']
         self.extractor = extractor_class(self.pipeline_config['extractor'])
 
-        self.transform_query = self.pipeline_config.get('transform_query')
+        self.transformer = self.pipeline_config.get('transformer')
 
         loader_class = self.pipeline_config['loader']['class']
         self.loader = loader_class(self.pipeline_config['loader'])
@@ -23,17 +22,38 @@ class Pipeline():
 
 
     def transform(self, records:DuckDBPyRelation) -> DuckDBPyRelation:
-        if not self.transform_query:
+        if not self.transformer:
             return records
         
-        else:
-            query_path = Path(self.transform_query).resolve()
+        elif 'query_path' in self.transformer:
+            query_path = Path(self.transformer['query_path']).resolve()
+            query_format_values = self.transformer.get('kwargs')
             
             with open(query_path, 'r') as f:
                 tquery = f.read()
 
+            if isinstance(query_format_values, dict):
+                tquery = tquery.format(**query_format_values)
+
             clean_records = duckdb.sql(tquery)
             return clean_records
+        
+        elif 'function' in self.transformer:
+            transform_func = self.transformer['function']
+            transform_kwargs = self.transformer.get('kwargs', dict())
+
+            if callable(transform_func):
+                clean_records = transform_func(records, **transform_kwargs)
+            else:
+                raise ValueError(f'The value passed in transformer.function is not a callable Python object.')
+
+            if isinstance(clean_records, DuckDBPyRelation):
+                return clean_records
+            else:
+                raise TypeError(f'The transformer function must return a DuckDBPyRelation. Got {type(clean_records)}')
+
+        else:
+            raise ValueError(f'The transformer config must specify a "query_path" or "function" key.')
 
 
     def load(self, records:DuckDBPyRelation) -> None:
@@ -48,5 +68,5 @@ class Pipeline():
         self.load(clean_records)
 
         end_time = time.time()
-        print('Run complete.\n')
+        print('Run complete.')
         print(f'Time elapsed: {round(end_time - start_time, 3)} seconds\n')
