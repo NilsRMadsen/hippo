@@ -1,8 +1,10 @@
 # Hippo Data Ingestion
 
-Hippo implements a pipeline-as-config framework for data ingestion pipelines, using DuckDB (https://duckdb.org/) as the underlying query engine. 
+**NOTE**: This project is in very early prototyping/experimental development. Anything in this project could change from this point on, including the underlying query engine.
 
-The intended use case is single-node data ingestion of small to medium size data. Where possible, Hippo uses DuckDB's built-in streaming capabilities to process larger-than-memory files and data streams.
+Hippo implements a modular configuration framework for data ingestion pipelines, using DuckDB (https://duckdb.org/) as the underlying query engine. 
+
+The intended use case is single-node data ingestion of small to medium size data. Where feasible, Hippo uses DuckDB's built-in stream processing capabilities to process larger-than-memory files and data streams.
 
 ## Extractors and Loaders
 
@@ -59,7 +61,7 @@ The only requirements for a custom loader to work correctly within the Hippo fra
 
 ### Dagster
 
-Since each pipeline extracts a single source into a single destination, Hippo pipelines fit naturally into Dagster's data asset paradigm. Creating a Dagster asset from a hippo pipeline is really this easy:
+Since each pipeline extracts a single source into a single destination, Hippo pipelines fit naturally into Dagster's data asset paradigm. Creating a Dagster asset from a Hippo pipeline is really this easy:
 
 ```
 import config
