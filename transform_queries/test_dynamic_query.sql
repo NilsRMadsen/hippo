@@ -5,3 +5,6 @@ select
     , "State" as state
     , "Postal Code" as postal_code
 from records
+where
+    "City" = '{city}'
+    and "State" = '{state}'
