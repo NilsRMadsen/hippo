@@ -6,16 +6,7 @@ from duckdb.duckdb import DuckDBPyRelation
 from pathlib import Path
 
 
-class HippoLoader():
-    '''
-    Base class for Hippo loaders.
-    '''
-    def __init__(self, loader_config:dict) -> None:
-        self.loader_config = loader_config
-        self.kwargs = loader_config.get('kwargs', dict())
-
-
-class LocalFileLoader(HippoLoader):
+class LocalFileLoader():
     '''
     A loader for writing data to local files.
     '''
@@ -24,7 +15,8 @@ class LocalFileLoader(HippoLoader):
 
 
     def __init__(self, loader_config:dict) -> None:
-        super().__init__(loader_config)
+        self.loader_config = loader_config
+        self.kwargs = loader_config.get('kwargs', dict())
 
         try:
             self.format = loader_config['format']

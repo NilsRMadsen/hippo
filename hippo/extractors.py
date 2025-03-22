@@ -3,16 +3,7 @@ from duckdb.duckdb import DuckDBPyRelation
 from pathlib import Path
 
 
-class HippoExtractor():
-    '''
-    Base class for Hippo extractors
-    '''
-    def __init__(self, extractor_config:dict) -> None:
-        self.extractor_config = extractor_config
-        self.kwargs = extractor_config.get('kwargs', dict())
-
-
-class LocalFileExtractor(HippoExtractor):
+class LocalFileExtractor():
     '''
     An extractor for reading data from local files.
     '''
@@ -20,7 +11,8 @@ class LocalFileExtractor(HippoExtractor):
 
 
     def __init__(self, extractor_config:dict) -> None:
-        super().__init__(extractor_config)
+        self.extractor_config = extractor_config
+        self.kwargs = extractor_config.get('kwargs', dict())
 
         self.format = extractor_config['format']
         if self.format not in self.valid_formats:
