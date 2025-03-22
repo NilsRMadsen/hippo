@@ -1,6 +1,6 @@
 # Hippo Data Ingestion
 
-**IMPORTANT**: This project is in early prototyping/experimental development. The core philosophy and pipeline functionality is unlikely to change at this point, but the extractors and loaders are still under active development.
+**IMPORTANT**: This project is in early prototyping/experimental development. The core philosophy and pipeline functionality are unlikely to change at this point, but the extractors and loaders are still under active development.
 
 Hippo is a modular configuration framework for data ingestion pipelines, using DuckDB (https://duckdb.org/) as the underlying query engine. The framework is specifically designed to be extremely simple and intuitive to use for anyone familiar with Python, with minimal dependencies outside of DuckDB. The goal is to make simple data pipelines very fast to set up, while still having a framework flexible enough to accommodate the complex, bespoke logic often required in real-world data engineering.
 
