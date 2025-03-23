@@ -2,6 +2,16 @@ import transformers
 from hippo import connectors
 
 
+SECRETS = {
+
+    's3_default': {
+        'type': 's3',
+        'provider': 'credential_chain',
+    },
+
+}
+
+
 PIPELINES = {
 
     'test_read_write_csv': {
