@@ -1,31 +1,33 @@
 # Hippo Data Ingestion
 
-**IMPORTANT**: This project is in early prototyping/experimental development. The core philosophy and pipeline functionality are unlikely to change at this point, but the extractors and loaders are still under active development.
+**WARNING**: *This project is in early prototyping/experimental development. The core philosophy and pipeline functionality are unlikely to change at this point, but the connectors are still under active development.*
 
-Hippo is a modular configuration framework for data ingestion pipelines, using DuckDB (https://duckdb.org/) as the underlying query engine. The framework is specifically designed to be extremely simple and intuitive to use for anyone familiar with Python, with minimal dependencies outside of DuckDB. The goal is to make simple data pipelines very fast to set up, while still having a framework flexible enough to accommodate the complex, bespoke logic often required in real-world data engineering.
+Hippo is a modular configuration framework for data ingestion pipelines, using DuckDB (https://duckdb.org/) as the underlying query engine. The framework is intentionally designed to be extremely simple and intuitive to use for anyone familiar with Python. The goal is to make simple data pipelines very fast to set up, while still being flexible enough to accommodate the complex, bespoke logic often required in real-world data engineering.
 
 The intended use case is single-node ingestion of small to medium size data. Where possible, Hippo uses DuckDB's built-in stream processing capabilities to process larger-than-memory files and data streams.
 
 ## Extractors and Loaders
 
-Each pipeline is composed of one extractor and one loader, with an optional transformation step.
+Each pipeline is composed of one extractor and one loader, with an optional transformation step. Extractors and loaders are instances of connector classes.
 
-Every extractor class exposes an ```extract``` method that returns a DuckDBPyRelation. Similarly, every loader class exposes a ```load``` method that accepts a DuckDBPyRelation as input. Having this consistent interface allows us to freely mix-and-match extractors and loaders.
+Connector classes expose an ```extract``` method that returns a DuckDBPyRelation, and a ```load``` method that accepts a DuckDBPyRelation as input. When a connector is used as an extractor, the ```extract``` method will be called, and when it is used as a loader the ```load``` method will be called. Having this consistent interface allows us to freely mix-and-match connectors as extractors and loaders. 
+
+**NOTE**: Some connectors won't implement both ```extract``` and ```load```, for example an API connector that is only intended for pulling data from a REST API and not writing to that API.
 
 Example extractor and loader config:
 ```python
-from hippo import extractors, loaders
+from hippo import connectors
 
 PIPELINES = {
     'my_pipeline': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/raw.csv',
             'kwargs': {'header': True}   # passed to duckdb.read_csv()
         },
         'loader': {
-            'class': loaders.LocalFileLoader,
+            'class': connectors.FileConnector,
             'format': 'parquet',
             'filepath': './data/out.parquet',
             'update_mode': 'overwrite',
@@ -96,7 +98,7 @@ A single Hippo pipeline should read from a single source, e.g. a single endpoint
 
 ## Dynamic Configuration
 
-Unlike other configuration frameworks, Hippo uses native Python dictionaries in a ```config.py``` or similarly-named module to store configurations. This allows for dynamic insertion of configuration values, and the passing of extractor and loader classes directly in the config. 
+Unlike other configuration frameworks, Hippo uses native Python dictionaries in a ```config.py``` or similarly-named module to store pipeline configurations. This allows for dynamic insertion of configuration values, and for passing connector classes and transformer functions directly in the config.
 
 ## Running a Pipeline
 
@@ -113,29 +115,32 @@ pipeline.run()
 
 ## Extensibility
 
-Because of Hippo's dynamic configuration, it is very simple to extend its functionality with your own custom extractor and loader classes. For example, you can create a ```custom_extractors.py``` module in your project directory...
+Because of Hippo's dynamic configuration, it is very simple to extend its functionality with your own custom connector classes. For example, you can create a ```custom_connectors.py``` module in your project directory...
 
 ```python
 from duckdb.duckdb import DuckDBPyRelation
 
-class MyCustomExtractor():
-    def __init__(self, extractor_config:dict) -> None:
+class MyCustomConnector():
+    def __init__(self, connector_config:dict) -> None:
         ...
 
     def extract(self) -> DuckDBPyRelation:
+        ...
+
+    def load(self, records:DuckDBPyRelation) -> None:
         ...
 ```
 
 ...then import this module into ```config.py```:
 
 ```python
-from hippo import extractors, loaders
-import custom_extractors
+from hippo import connectors
+import custom_connectors
 
 PIPELINES = {
     'my_pipeline': {
         'extractor': {
-            'class': custom_extractors.MyCustomExtractor,
+            'class': custom_connectors.MyCustomConnector,
             ...
         },
         ...
@@ -143,9 +148,9 @@ PIPELINES = {
 }
 ```
 
-The only requirement for a custom extractor to work correctly within the Hippo framework is for the extractor class to expose an ```extract``` method that returns a DuckDBPyRelation.
+The only requirement for a custom connector to work correctly as an extractor within the Hippo framework is for the connector class to expose an ```extract``` method that returns a DuckDBPyRelation.
 
-The only requirement for a custom loader to work correctly within the Hippo framework is for the loader class to expose a ```load``` method that accepts a DuckDBPyRelation as its sole argument.
+The only requirement for a custom connector to work correctly as a loader within the Hippo framework is for the connector class to expose a ```load``` method that accepts a DuckDBPyRelation as its sole argument.
 
 ## Integration with Orchestrators
 

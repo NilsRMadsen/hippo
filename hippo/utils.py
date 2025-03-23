@@ -25,3 +25,25 @@ def add_uuid_to_filename(filepath:str|Path) -> str:
     uri_components.append(new_path)
 
     return '://'.join(uri_components)
+
+
+def infer_file_system(filepath:str) -> str:
+    '''
+    Uses regex patterns to infer file system from a path or URI.
+    '''
+
+    if re.match(r'^s3[na]?:', filepath):
+        return 's3'
+    elif re.match(r'^gs:', filepath):
+        return 'gcs'
+    elif re.match(r'^(?:az|azure):', filepath):
+        return 'azure_blob'
+    else:
+        return 'local'
+
+
+def format_options(options:dict) -> str:
+    '''
+    Returns a DuckDB options string, based on the input options dictionary.
+    '''
+    return ', '.join(f'{option} {value}' for option, value in options.items())

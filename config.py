@@ -1,12 +1,12 @@
 import transformers
-from hippo import extractors, loaders
+from hippo import connectors
 
 
 PIPELINES = {
 
     'test_read_write_csv': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -14,7 +14,7 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/test_out.csv',
             'update_mode': 'overwrite',
@@ -23,7 +23,7 @@ PIPELINES = {
 
     'test_write_new_file_csv': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -31,7 +31,7 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/test_out.csv',
             'update_mode': 'new_file',
@@ -40,7 +40,7 @@ PIPELINES = {
 
     'test_write_parquet': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -48,7 +48,7 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'parquet',
             'filepath': './data/test_out.parquet',
             'update_mode': 'overwrite',
@@ -57,7 +57,7 @@ PIPELINES = {
 
     'test_write_new_file_parquet': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -65,7 +65,7 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'parquet',
             'filepath': './data/test_out.parquet',
             'update_mode': 'new_file',
@@ -74,7 +74,7 @@ PIPELINES = {
 
     'test_write_json': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -82,7 +82,7 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'json',
             'filepath': './data/test_out.json',
             'update_mode': 'overwrite',
@@ -91,7 +91,7 @@ PIPELINES = {
 
     'test_write_new_file_json': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -99,7 +99,7 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'json',
             'filepath': './data/test_out.json',
             'update_mode': 'new_file',
@@ -108,7 +108,7 @@ PIPELINES = {
 
     'test_dynamic_query': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -117,7 +117,7 @@ PIPELINES = {
             'kwargs': {'city': 'Seattle', 'state': 'WA'}
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/test_out_dynamic_query.csv',
             'update_mode': 'overwrite',
@@ -126,7 +126,7 @@ PIPELINES = {
 
     'test_transform_func': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -135,7 +135,7 @@ PIPELINES = {
             'kwargs': {'limit': 1000, 'order_field': 'vin asc'}
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/test_out_func.csv',
             'update_mode': 'overwrite',
@@ -144,7 +144,7 @@ PIPELINES = {
 
     'test_read_parquet': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'parquet',
             'filepath': './data/test_out.parquet',
         },
@@ -152,17 +152,17 @@ PIPELINES = {
             'query_path': './transform_queries/test_parquet.sql',
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'json',
             'filepath': './data/test_read_parquet_out.json',
             'update_mode': 'overwrite',
-            #'kwargs': {'separators': (', ', ': ')}
+            'kwargs': {'array': False, 'compression': 'gzip'}
         }
     },
 
     'test_read_json': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'json',
             'filepath': './data/test_out.json',
             #'kwargs': {}
@@ -172,7 +172,7 @@ PIPELINES = {
             #'kwargs': {}
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'json',
             'filepath': './data/test_read_json_out.json',
             #'kwargs': {}
@@ -181,7 +181,7 @@ PIPELINES = {
 
     'test_write_s3_csv': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -189,16 +189,20 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': 's3://nils-hippo-test/test_out.csv',
             'update_mode': 'overwrite',
+            'secret_options': {
+                'type': 's3',
+                'provider': 'credential_chain',
+            },
         }
     },
 
     'test_write_s3_parquet': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -206,16 +210,33 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'parquet',
             'filepath': 's3://nils-hippo-test/test_out.parquet',
+            'update_mode': 'overwrite',
+        }
+    },
+
+    'test_write_s3_json': {
+        'extractor': {
+            'class': connectors.FileConnector,
+            'format': 'csv',
+            'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
+        },
+        'transformer': {
+            'query_path': './transform_queries/test_csv.sql'
+        },
+        'loader': {
+            'class': connectors.FileConnector,
+            'format': 'json',
+            'filepath': 's3://nils-hippo-test/test_out.json',
             'update_mode': 'overwrite',
         }
     },
 
     'test_write_s3_parquet_newfile': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
+            'class': connectors.FileConnector,
             'format': 'csv',
             'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
         },
@@ -223,27 +244,27 @@ PIPELINES = {
             'query_path': './transform_queries/test_csv.sql'
         },
         'loader': {
-            'class': loaders.FileLoader,
+            'class': connectors.FileConnector,
             'format': 'parquet',
             'filepath': 's3://nils-hippo-test/test_out.parquet',
             'update_mode': 'new_file',
         }
     },
 
-    'test_write_s3_json_newfile': {
+    'test_read_write_s3_parquet': {
         'extractor': {
-            'class': extractors.LocalFileExtractor,
-            'format': 'csv',
-            'filepath': './data/Electric_Vehicle_Population_Data.csv', #https://catalog.data.gov/dataset/electric-vehicle-population-data
+            'class': connectors.FileConnector,
+            'format': 'parquet',
+            'filepath': 's3://nils-hippo-test/test_out.parquet',
         },
         'transformer': {
-            'query_path': './transform_queries/test_csv.sql'
+            'query_path': './transform_queries/test_parquet.sql',
         },
         'loader': {
-            'class': loaders.FileLoader,
-            'format': 'json',
-            'filepath': 's3://nils-hippo-test/test_out.json',
-            'update_mode': 'new_file',
+            'class': connectors.FileConnector,
+            'format': 'csv',
+            'filepath': 's3://nils-hippo-test/test_out_2.csv',
+            'update_mode': 'overwrite'
         }
     },
 
