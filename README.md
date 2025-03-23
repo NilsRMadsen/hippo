@@ -152,6 +152,33 @@ The only requirement for a custom connector to work correctly as an extractor wi
 
 The only requirement for a custom connector to work correctly as a loader within the Hippo framework is for the connector class to expose a ```load``` method that accepts a DuckDBPyRelation as its sole argument.
 
+## Managing Secrets
+
+Hippo implements a ```SecretsManager``` class to create and drop DuckDB temporary secrets in an object-oriented fashion:
+
+```python
+import config
+from hippo.secrets import SecretsManager
+
+secrets = SecretsManager(config.SECRETS)
+secrets.create_all()
+```
+
+In ```config.py```:
+```python
+SECRETS = {
+    's3_default': {
+        'type': 's3',
+        'provider': 'credential_chain',
+    },
+    ...
+}
+```
+
+Hippo doesn't support creating persistent secrets, because DuckDB doesn't handle these in a secure fashion (secrets are persisted to an unencrypted file on disk.)
+
+***IMPORTANT:*** It is strongly recommended not to hard-code credentials in the secrets config. Instead, you should dynamically insert these values into the config from an encrypted secrets store.
+
 ## Integration with Orchestrators
 
 ### Dagster

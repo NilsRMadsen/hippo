@@ -15,14 +15,14 @@ class SecretsManager():
 
     def create_secret(self, name:str) -> None:
         try:
-            secret_dict = self.secrets_config[name]
+            secret_options = self.secrets_config[name]
         except KeyError:
             raise KeyError(f'"{name}" is not a key in the secrets config.')
 
         duckdb.sql(f'''
             create or replace temporary secret {name} (
-                {utils.format_options(secret_dict)}
-            )
+                {utils.format_options(secret_options)}
+            );
         ''')
 
 
@@ -47,3 +47,10 @@ class SecretsManager():
         '''
         for name in self.secrets_config.keys():
             self.drop_secret(name)
+
+    
+    def list_all(self) -> None:
+        '''
+        Lists all DuckDB secrets (even those not in the secrets config).
+        '''
+        duckdb.sql('from duckdb_secrets();').show()

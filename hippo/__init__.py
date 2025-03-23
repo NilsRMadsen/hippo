@@ -1,1 +1,1 @@
-from . import pipeline, connectors, utils
+from . import pipeline, connectors, secrets, utils
