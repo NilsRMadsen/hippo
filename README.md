@@ -4,7 +4,7 @@
 
 Hippo is a modular configuration framework for data ingestion pipelines, using DuckDB (https://duckdb.org/) as the underlying query engine. The framework is specifically designed to be extremely simple and intuitive to use for anyone familiar with Python, with minimal dependencies outside of DuckDB. The goal is to make simple data pipelines very fast to set up, while still having a framework flexible enough to accommodate the complex, bespoke logic often required in real-world data engineering.
 
-The intended use case is single-node data ingestion of small to medium size data. Where possible, Hippo uses DuckDB's built-in stream processing capabilities to process larger-than-memory files and data streams.
+The intended use case is single-node ingestion of small to medium size data. Where possible, Hippo uses DuckDB's built-in stream processing capabilities to process larger-than-memory files and data streams.
 
 ## Extractors and Loaders
 
@@ -151,7 +151,7 @@ The only requirement for a custom loader to work correctly within the Hippo fram
 
 ### Dagster
 
-Since each pipeline extracts a single source into a single destination, Hippo pipelines fit naturally into Dagster's data asset paradigm. Creating a Dagster asset from a Hippo pipeline really is this easy:
+Since each pipeline extracts a single source into a single destination, Hippo pipelines fit naturally into Dagster's data asset philosophy. Creating a Dagster asset from a Hippo pipeline really is this easy:
 
 ```python
 import config

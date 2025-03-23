@@ -1,4 +1,5 @@
 import duckdb
+
 from duckdb.duckdb import DuckDBPyRelation
 from pathlib import Path
 
